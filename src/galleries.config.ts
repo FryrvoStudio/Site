@@ -15,6 +15,7 @@ laylai: {
       imagePath: "src/images",
       title: "Gymnastics 2026",
       description: "Rhythmic-Gymnastics-Thailand-Championships-2026",
+      icon: "https://cdn.fryrvo.com/assets/fryrvomusic/cover/SingalSONGCOVER.jpg",
     },
     "gymnastics-2024": {
       owner: "Fryrvo-Stuff",
@@ -22,6 +23,7 @@ laylai: {
       imagePath: "src/images",
       title: "Gymnastics 2024",
       description: "Rhythmic-Gymnastics-Thailand-Championships-2024",
+      icon: "https://cdn.fryrvo.com/assets/fryrvomusic/cover/TimeSONGCOVER.jpg",
     },
     "apac-cup-2023": {
       owner: "Fryrvo-Stuff",

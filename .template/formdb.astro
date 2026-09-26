@@ -1,50 +1,71 @@
 ---
-import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
+import PocketBase from 'pocketbase';
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
-const images = import.meta.glob<{ default: ImageMetadata }>(
-  "../../images2/*.{jpg,jpeg,png,webp}",
-);
+// pull form fryrvo DB
+
+// config
+const COLLECTION_NAME = "test";
+const RECORD_ID = "twf382f7lbc7an2";
+
+let imageUrls: string[] = [];
+
+try {
+  const pb = new PocketBase(import.meta.env.PUBLIC_DB_URL);
+  await pb.admins.authWithPassword(
+    import.meta.env.DB_USER,
+    import.meta.env.DB_PASSWORD
+  );
+  const record = await pb.collection(COLLECTION_NAME).getOne(RECORD_ID);
+
+  if (record && record.file) {
+    const fileToken = await pb.files.getToken(); //
+    
+    imageUrls = record.file.map((filename: string) => 
+      pb.files.getURL(record, filename, { token: fileToken }) //
+    );
+  }
+} catch (error) {
+  console.error("PocketBase Error:", error);
+}
 ---
 
 <Layout
   title="Fryrvo artwork"
   description="A collection of Fryrvo's artwork."
 >
-<section class="py-12 sm:py-16">
-  <div class="mx-auto max-w-2xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8">
-    <div class="flex flex-col gap-3 sm:gap-5">
-      <h1 class="text-3xl font-medium tracking-tight sm:text-4xl lg:text-5xl">Picture</h1>
-      <p class="text-primary-950/70 dark:text-primary-200/70 mx-auto max-w-xl text-base sm:text-lg">
-        stuff 
-      </p>
+  <section class="py-12 sm:py-16">
+    <div class="mx-auto max-w-2xl px-4 text-center sm:px-6 lg:max-w-7xl lg:px-8">
+      <div class="flex flex-col gap-3 sm:gap-5">
+        <h1 class="text-3xl font-medium tracking-tight sm:text-4xl lg:text-5xl">Galleries</h1>
+        <p class="text-primary-950/70 dark:text-primary-200/70 mx-auto max-w-xl text-base sm:text-lg">
+          drawing and picture of stuff i do 
+        </p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <section class="justified-gallery" id="photoswipe">
-  <section class="justified-gallery" id="photoswipe">
     {
-      Object.entries(images).map(async ([_path, image], index) => {
-        const { default: imageData } = await image();
-        return (
+      imageUrls.length > 0 ? (
+        imageUrls.map((url, index) => (
           <a
-            style={`--width: ${imageData.width}; --height: ${imageData.height};`}
-            href={imageData.src}
+            href={url}
             target="_blank"
             data-fancybox="gallery"
           >
-            <Image
-              format="webp"
-              src={imageData}
+            <img
+              src={url}
               alt=""
-              height={400}
+              height="400"
               loading={index < 20 ? "eager" : "lazy"}
             />
           </a>
-        );
-      })
+        ))
+      ) : (
+        <p class="col-span-full text-center text-gray-500">No images found or failed to load from PocketBase.</p>
+      )
     }
   </section>
 </Layout>
@@ -91,9 +112,9 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
     gap: var(--space);
 
     a {
-      flex-grow: calc(var(--width) * (100000 / var(--height)));
-      flex-basis: calc(var(--min-height) * (var(--width) / var(--height)));
-      aspect-ratio: var(--width) / var(--height);
+      flex-grow: 1;
+      flex-basis: 300px;
+      aspect-ratio: 4 / 3;
       overflow: hidden;
       opacity: 1;
       transition: all 0.05s ease-in-out;
