@@ -55,7 +55,7 @@ try {
       if (file.type === "file" && /\.(jpg|jpeg|png|webp)$/i.test(file.name)) {
         const fullFilePath = `${imagePath}/${file.name}`;
         const sig = await generateSignature(fullFilePath, secret);
-        imageUrls.push(`/api/github/image/${owner}/${repo}/${fullFilePath}?sig=${sig}`);
+        imageUrls.push(`picture/api/github/image/${owner}/${repo}/${fullFilePath}?sig=${sig}`);
       }
     }
   }
