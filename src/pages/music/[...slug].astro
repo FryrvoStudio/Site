@@ -53,11 +53,11 @@ const d = post?.frontmatter || {};
             {d.title}
           </h1>
           {
-            d.date && (
-              <p class="text-primary-950/60 dark:text-primary-200/60 mt-2 text-sm">
-                Released {new Date(d.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-              </p>
-            )
+           d.date && (
+            <p class="text-primary-950/60 dark:text-primary-200/60 mt-2 text-sm">
+             Released {new Date(d.date)?.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            </p>
+           )
           }
           {
             d.quote && (
